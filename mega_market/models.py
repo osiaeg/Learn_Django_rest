@@ -9,34 +9,38 @@ class ShopUnitType(models.TextChoices):
 class ShopUnit(models.Model):
     id = models.UUIDField(
             primary_key=True,
-    #        default=uuid.uuid4,
+            default=uuid.uuid4,
             editable=False
             )
     name = models.CharField(max_length=50)
-    date = models.DateField()
-    parentID = models.UUIDField(
-            default=uuid.uuid4,
-            editable=False,
-            null=True
+    date = models.DateField(auto_now=True)
+    parentID = models.ForeignKey(
+            "self",
+            on_delete=models.PROTECT,
+            null=True,
+            blank=True
             )
     type = models.CharField(
             choices=ShopUnitType.choices,
             max_length=10)
-    price = models.PositiveIntegerField(null=True)
+    price = models.PositiveIntegerField(null=True, blank=True)
 #    childern = models.DictField()
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class ShopUnitImport(models.Model):
     id = models.UUIDField(
             primary_key=True,
-    #        default=uuid.uuid4,
             editable=False
             )
     name = models.CharField(max_length=50)
-    parentID = models.UUIDField(
-    #        default=uuid.uuid4,
-            editable=False,
-            null=True
+    parentID = models.ForeignKey(
+            "ShopUnit",
+            on_delete=models.PROTECT,
+            null=True,
+            blank=True
             )
     type = models.CharField(
             choices=ShopUnitType.choices,
@@ -52,12 +56,12 @@ class ShopUnitImportRequest(models.Model):
 class ShopUnitStatisticUnit(models.Model):
     id = models.UUIDField(
             primary_key=True,
-    #        default=uuid.uuid4,
+            default=uuid.uuid4,
             editable=False
             )
     name = models.CharField(max_length=50)
     parentID = models.UUIDField(
-    #        default=uuid.uuid4,
+            default=uuid.uuid4,
             editable=False,
             null=True
             )
@@ -65,7 +69,7 @@ class ShopUnitStatisticUnit(models.Model):
             choices=ShopUnitType.choices,
             max_length=10)
     price = models.PositiveIntegerField(null=True)
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
 
 
 class ShopUnitStatisticResponse(models.Model):
@@ -75,3 +79,6 @@ class ShopUnitStatisticResponse(models.Model):
 class Error(models.Model):
     code = models.PositiveIntegerField()
     message = models.TextField()
+
+    def __str__(self):
+        return f"code: {self.code}"

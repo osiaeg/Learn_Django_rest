@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-d_rkl((yxxkk&n)to99n47!m1&c4jlmnuzqc13xl&uevwb%k)d
 DEBUG = True
 
 ALLOWED_HOSTS = [
-        '192.168.31.182',
+        '192.168.0.149',
         ]
 
 
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mega_market.apps.MegaMarketConfig'
+    'mega_market.apps.MegaMarketConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
