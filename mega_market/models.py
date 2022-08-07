@@ -9,7 +9,6 @@ class ShopUnitType(models.TextChoices):
 class ShopUnit(models.Model):
     id = models.UUIDField(
             primary_key=True,
-            default=uuid.uuid4,
             editable=False
             )
     name = models.CharField(max_length=50)
@@ -24,7 +23,6 @@ class ShopUnit(models.Model):
             choices=ShopUnitType.choices,
             max_length=10)
     price = models.PositiveIntegerField(null=True, blank=True)
-#    childern = models.DictField()
 
     def __str__(self):
         return f"{self.name}"
@@ -50,7 +48,7 @@ class ShopUnitImport(models.Model):
 
 class ShopUnitImportRequest(models.Model):
     items = models.ForeignKey(ShopUnitImport, on_delete=models.CASCADE)
-    updateDate = models.DateField()
+    updateDate = models.DateTimeField()
 
 
 class ShopUnitStatisticUnit(models.Model):
