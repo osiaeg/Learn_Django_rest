@@ -40,9 +40,6 @@ class ShopUnitImportSerializer(serializers.Serializer):
             else:
                 raise serializers.ValidationError("Offer price isn't correct")
 
-    def create(self, validated_data):
-        return ShopUnit.objects.create(**validated_data)
-
 
 class ShopUnitImportRequestSerializer(serializers.Serializer):
     items = serializers.ListField(
@@ -50,3 +47,7 @@ class ShopUnitImportRequestSerializer(serializers.Serializer):
             child=ShopUnitImportSerializer()
             )
     updateDate = serializers.DateTimeField()
+
+    def create(self, validated_data):
+        shop_units = [ShopUnit(**item, date=validated_data['updateDate']) for item in validated_data['items']]
+        return ShopUnit.objects.bulk_create(shop_units)

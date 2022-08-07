@@ -12,8 +12,8 @@ class ShopUnit(models.Model):
             editable=False
             )
     name = models.CharField(max_length=50)
-    date = models.DateField(auto_now=True)
-    parentID = models.ForeignKey(
+    date = models.DateField()
+    parentId = models.ForeignKey(
             "self",
             on_delete=models.PROTECT,
             null=True,

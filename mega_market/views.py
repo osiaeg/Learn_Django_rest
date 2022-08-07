@@ -14,7 +14,11 @@ import datetime
 class import_view(APIView):
     def post(self, request):
         serializer = ShopUnitImportRequestSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        # Нужно дописать создание записи в базе данных
-
-        return Response({'request': serializer.data})
+        if serializer.is_valid():
+            serializer.save()
+            return Response()
+        else:
+            return Response({
+                "code": 400,
+                "message": "Validation Failed"
+                }, status=400)
