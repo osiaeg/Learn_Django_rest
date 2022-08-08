@@ -4,12 +4,10 @@ from .models import ShopUnit, ShopUnitType
 class ShopUnitImportSerializer(serializers.Serializer):
     id = serializers.UUIDField(format='hex_verbose')
     name = serializers.CharField()
-    parentId = serializers.UUIDField(
-            format='hex_verbose',
-            allow_null=True,
-            )
+    parentId = serializers.UUIDField(format='hex_verbose', allow_null=True)
     type = serializers.CharField() # нужно узнать как проверять Enum
     price = serializers.IntegerField(allow_null=True)
+
 
     def validate_parentId(self, parent_id):
         """
@@ -49,5 +47,19 @@ class ShopUnitImportRequestSerializer(serializers.Serializer):
     updateDate = serializers.DateTimeField()
 
     def create(self, validated_data):
-        shop_units = [ShopUnit(**item, date=validated_data['updateDate']) for item in validated_data['items']]
+        #shop_units = [ShopUnit(**item, date=validated_data['updateDate']) for item in validated_data['items']]
+        shop_units = []
+        for item in validated_data['items']:
+            if item['parentId'] is None:
+                shop_units.append(ShopUnit(**item, date=validated_data['updateDate']))
+            else:
+                shop_unit = ShopUnit(
+                        id = item['id'],
+                        name = item['name'],
+                        date = validated_data['updateDate'],
+                        parentId = ShopUnit.objects.get(pk=item['parentId']),
+                        type = item['type'],
+                        price = item['price']
+                        )
+                shop_units.append(shop_unit)
         return ShopUnit.objects.bulk_create(shop_units)

@@ -14,9 +14,12 @@ import datetime
 class import_view(APIView):
     def post(self, request):
         serializer = ShopUnitImportRequestSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response()
+            return Response({
+                "code":200,
+                "message": "success"
+                })
         else:
             return Response({
                 "code": 400,
